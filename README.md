@@ -1,3 +1,3 @@
 # rea
 
-https://nextjs.org/learn/dashboard-app/creating-layouts-and-pages
+https://create.t3.gg/en/introduction
