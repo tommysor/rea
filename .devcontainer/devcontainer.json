@@ -16,7 +16,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "yarn install",
+	"postCreateCommand": "cd nextjs-dashboard && pnpm i",
 
 	// Configure tool-specific properties.
 	"customizations": {
