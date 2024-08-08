@@ -1,3 +1,6 @@
 # rea
 
-https://create.t3.gg/en/introduction
+From nothing
+```
+npm install typescript
+```
