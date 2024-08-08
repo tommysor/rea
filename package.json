@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "npx tsc && cp --recursive reatam/public/* dist/",
+    "build": "npx tsc && find ./dist/ -name '*.test.js' -type f -delete && cp --recursive reatam/public/* dist/",
     "test": "jest"
   },
   "devDependencies": {
