@@ -1,7 +1,8 @@
-function dothis() {
-  var elem = document.getElementById("hello-world");
-  if (elem) {
-    elem.innerHTML = "Hello typescript!";
-  }
+function getGreeting() {
+  return "Hello typescript 2!";
 }
-dothis();
+
+export function dummyMaths(a: number, b: number): number {
+  // todo: remove when first real function is added
+  return a + b;
+}

@@ -5,5 +5,9 @@
     <body>
         <p id="hello-world">Hello World!</p>
         <script src="./index.js"></script>
+        <script>
+            var greeting = getGreeting();
+            document.getElementById('hello-world').innerText = greeting;
+        </script>
     </body>
 </html>
