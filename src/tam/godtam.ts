@@ -19,6 +19,9 @@ export function godDecision(godTam: GodTamUnit): GodTamUnit {
     };
   }
 
-  // Do nothing
-  return godTam;
+  const newGodTam = { ...godTam, tams: [...godTam.tams] };
+  const deadTam = godTam.tams.find((tam) => tam.foodLevel <= 0);
+  newGodTam.tams = godTam.tams.filter((tam) => tam.id != deadTam?.id);
+
+  return newGodTam;
 }
