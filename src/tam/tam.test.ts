@@ -9,4 +9,9 @@ describe('createTam', () => {
         expect(tam.id).toBeTruthy();
         expect(typeof tam.id).toBe('string');
     });
+
+    it('should create Tam with foodLevel max', () => {
+        const tam = createTam({id: 'myId'});
+        expect(tam.foodLevel).toBe(100);
+    });
 });
