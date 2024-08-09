@@ -7,7 +7,9 @@ export default function World() {
   const [worldTam, setWorldTam] = useState(createGodTam());
   useEffect(() => {
     const intervalGod = setInterval(() => {
-      setWorldTam(godDecision(worldTam));
+      setWorldTam((prev) => {
+        return godDecision(prev)
+    });
     }, 10_000);
     const interval = setInterval(() => {
       setWorldTam((prevWorldTam) => {
@@ -64,12 +66,13 @@ export default function World() {
           </dl>
         </div>
       </div>
-
-      {worldTam.tams.map((tam) => (
-        <div key={tam.id}>
-          <Tam tam={tam} />
-        </div>
-      ))}
+      <div className="grid grid-cols-5">
+        {worldTam.tams.map((tam) => (
+          <div key={tam.id} className="grid-flow-col">
+            <Tam tam={tam} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

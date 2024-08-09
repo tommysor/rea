@@ -14,8 +14,11 @@ export function godDecision(godTam: GodTamUnit): GodTamUnit {
   if (godTam.tams.length === 0) {
     const id = Math.ceil(Math.random() * 1_000_000);
     return {
-      tams: [createTam({ id: id.toString() })],
+      ...godTam,
+      tams: [...godTam.tams, createTam({ id: id.toString() })],
     };
   }
+
+  // Do nothing
   return godTam;
 }
