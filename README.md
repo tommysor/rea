@@ -1,6 +1,3 @@
 # rea
 
-From nothing
-```
-npm install typescript
-```
+From vite + react + ts
