@@ -13,3 +13,20 @@ export function createTam({ id }: { id: string}): TamUnit {
         foodLevel: foodLevelMax,
     };
 }
+
+export function idleTam(tam: TamUnit): TamUnit {
+    const newFoodLevel = tam.foodLevel - 1;
+    return {
+        ...tam,
+        age: tam.age + 1,
+        foodLevel: newFoodLevel < 0 ? 0 : newFoodLevel,
+    };
+}
+
+export function feedTam(tam: TamUnit): TamUnit {
+    const newFoodLevel = tam.foodLevel + 10;
+    return {
+        ...tam,
+        foodLevel: newFoodLevel > foodLevelMax ? foodLevelMax : newFoodLevel,
+    };
+}
