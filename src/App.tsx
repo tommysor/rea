@@ -1,24 +1,32 @@
 import { useState } from 'react'
-import { createTam } from './tam/tam'
+import { createTam, TamUnit } from './tam/tam'
+import Tam from './tam/Tam'
 
 export default function App() {
-  const [count, setCount] = useState(0)
-  const tam = createTam();
+  const [tams, setTams] = useState<TamUnit[]>([]);
+  function addNewTam() {
+    const newTam = createTam();
+    setTams([...tams, newTam]);
+  }
+  function clearTams() {
+    setTams([]);
+  }
 
   return (
     <>
       <p>
         Hello reatam
       </p>
-      <button onClick={() => setCount(count + 1)}>
-        Count: {count}
+      <button onClick={addNewTam}>
+        Add Tam
       </button>
-      <button onClick={() => setCount(0)}>
+      <button onClick={clearTams}>
         Clear
       </button>
-      <p>
-        {tam.id}: {tam.age}
-      </p>
+      {
+        tams.map((tam, index) => (
+          <div id={index.toString()}><Tam tam={tam} /></div>))
+      }
     </>
   )
 }
