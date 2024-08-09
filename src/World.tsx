@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { createTam, idleTam, feedTam } from "./tam/tam";
 import Tam from "./tam/Tam";
-import { createGodTam } from "./tam/godtam";
+import { createGodTam, godDecision } from "./tam/godtam";
 
 export default function World() {
   const [worldTam, setWorldTam] = useState(createGodTam());
   useEffect(() => {
+    const intervalGod = setInterval(() => {
+      setWorldTam(godDecision(worldTam));
+    }, 10_000);
     const interval = setInterval(() => {
       setWorldTam((prevWorldTam) => {
         const updatedTams = prevWorldTam.tams.map((tam) => {
@@ -16,24 +19,25 @@ export default function World() {
             return idleTam(tam);
           }
         });
-        const newWorldTam = {...prevWorldTam, tams: updatedTams};
+        const newWorldTam = { ...prevWorldTam, tams: updatedTams };
         return newWorldTam;
       });
     }, 1000);
 
     return () => {
       clearInterval(interval);
+      clearInterval(intervalGod);
     };
   }, []);
   function addNewTam() {
     const id = Math.ceil(Math.random() * 1_000_000);
     const newTam = createTam({ id: id.toString() });
     setWorldTam((prevWorldTam) => {
-      return {...prevWorldTam, tams: [...prevWorldTam.tams, newTam]};
+      return { ...prevWorldTam, tams: [...prevWorldTam.tams, newTam] };
     });
   }
   function clearTams() {
-    setWorldTam({...worldTam, tams: []});
+    setWorldTam({ ...worldTam, tams: [] });
   }
   return (
     <div>
@@ -41,9 +45,7 @@ export default function World() {
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
           <dl className="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-3">
             <div className="mx-auto flex max-w-xs flex-col gap-y-4">
-              <dt className="order-first text-xs leading-1 text-gray-600">
-                -
-              </dt>
+              <dt className="order-first text-xs leading-1 text-gray-600">-</dt>
               <div className="flex items-center justify-center">
                 <button
                   onClick={addNewTam}

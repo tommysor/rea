@@ -7,3 +7,11 @@ describe("createGodTam", () => {
     expect(godTam.tams.length).toBe(0);
   });
 });
+
+describe("godDecision", () => {
+    it("should create a new tam, when none is alive", () => {
+        const godtam = G.createGodTam();
+        const newGodTam = G.godDecision(godtam);
+        expect(newGodTam.tams.length).toBe(1);
+    })
+});
