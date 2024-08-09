@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { createTam, TamUnit, idleTam } from "./tam/tam";
+import { createTam, TamUnit, idleTam, feedTam } from "./tam/tam";
 import Tam from "./tam/Tam";
 
 export default function App() {
@@ -7,7 +7,14 @@ export default function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       setTams((prevTams) => {
-        const updatedTams = prevTams.map((tam) => idleTam(tam));
+        const updatedTams = prevTams.map((tam) => {
+          const rnd = Math.random();
+          if (rnd < 0.095) {
+            return feedTam(tam);
+          } else {
+            return idleTam(tam);
+          }
+        });
         return updatedTams;
       });
     }, 1000);
@@ -32,7 +39,7 @@ export default function App() {
       <button onClick={addNewTam}>Add Tam</button>
       <button onClick={clearTams}>Clear</button>
       {tams.map((tam) => (
-        <div id={tam.id}>
+        <div key={tam.id}>
           <Tam tam={tam} />
         </div>
       ))}
