@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { TamUnit, createTam, idleTam, feedTam } from "./tam/tam";
+import { createTam, idleTam, feedTam } from "./tam/tam";
 import Tam from "./tam/Tam";
+import { createGodTam } from "./tam/godtam";
 
 export default function World() {
-  const [worldTam] = useState(createTam({ id: "0" }));
-  const [tams, setTams] = useState<TamUnit[]>([]);
+  const [worldTam, setWorldTam] = useState(createGodTam());
   useEffect(() => {
     const interval = setInterval(() => {
-      setTams((prevTams) => {
-        const updatedTams = prevTams.map((tam) => {
+      setWorldTam((prevWorldTam) => {
+        const updatedTams = prevWorldTam.tams.map((tam) => {
           const rnd = Math.random();
           if (rnd < 0.095) {
             return feedTam(tam);
@@ -16,7 +16,8 @@ export default function World() {
             return idleTam(tam);
           }
         });
-        return updatedTams;
+        const newWorldTam = {...prevWorldTam, tams: updatedTams};
+        return newWorldTam;
       });
     }, 1000);
 
@@ -27,10 +28,12 @@ export default function World() {
   function addNewTam() {
     const id = Math.ceil(Math.random() * 1_000_000);
     const newTam = createTam({ id: id.toString() });
-    setTams([...tams, newTam]);
+    setWorldTam((prevWorldTam) => {
+      return {...prevWorldTam, tams: [...prevWorldTam.tams, newTam]};
+    });
   }
   function clearTams() {
-    setTams([]);
+    setWorldTam({...worldTam, tams: []});
   }
   return (
     <div>
@@ -39,7 +42,7 @@ export default function World() {
           <dl className="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-3">
             <div className="mx-auto flex max-w-xs flex-col gap-y-4">
               <dt className="order-first text-xs leading-1 text-gray-600">
-                Id: {worldTam.id}
+                -
               </dt>
               <div className="flex items-center justify-center">
                 <button
@@ -60,7 +63,7 @@ export default function World() {
         </div>
       </div>
 
-      {tams.map((tam) => (
+      {worldTam.tams.map((tam) => (
         <div key={tam.id}>
           <Tam tam={tam} />
         </div>
