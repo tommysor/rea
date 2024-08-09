@@ -2,18 +2,15 @@ import { TamUnit } from "./tam";
 
 export default function Tam({ tam }: { tam: TamUnit }) {
   return (
-    <div className="bg-white py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <div className="bg-neutral-300 rounded-3xl my-4 mx-4 py-4 sm:py-16">
+      <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <dl className="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-3">
           <div key={tam.id} className="mx-auto flex max-w-xs flex-col gap-y-4">
-            <dt className="order-first text-base leading-7 text-gray-600">
-              {tam.id}
+            <dt className="order-first text-xs leading-1 text-gray-600">
+              Id: {tam.id}, Age: {tam.age}
             </dt>
-            <dd className="order-2 text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-              {tam.age}
-            </dd>
-            <dd className="order-3 text-2xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-              {tam.foodLevel}
+            <dd className="order-3 font-semibold tracking-tight text-gray-900 sm:text-5xl">
+              Food: {tam.foodLevel}
             </dd>
           </div>
         </dl>
