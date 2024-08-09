@@ -5,7 +5,9 @@ import Tam from './tam/Tam'
 export default function App() {
   const [tams, setTams] = useState<TamUnit[]>([]);
   function addNewTam() {
-    const newTam = createTam();
+    const rnd = Math.random();
+    const id = Math.ceil(rnd * 1_000_000);
+    const newTam = createTam({ id: id.toString() });
     setTams([...tams, newTam]);
   }
   function clearTams() {
@@ -24,8 +26,8 @@ export default function App() {
         Clear
       </button>
       {
-        tams.map((tam, index) => (
-          <div id={index.toString()}><Tam tam={tam} /></div>))
+        tams.map(tam => (
+          <div id={tam.id}><Tam tam={tam} /></div>))
       }
     </>
   )

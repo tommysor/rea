@@ -3,9 +3,9 @@ export type TamUnit = {
     age: number;
 };
 
-export function createTam(): TamUnit {
+export function createTam({ id }: { id: string}): TamUnit {
     return {
-        id: '1',
+        id: id,
         age: 0,
     };
 }
