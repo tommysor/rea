@@ -28,7 +28,7 @@ export default function App() {
 
   return (
     <>
-      <p>
+      <p className='text-3xl font-bold underline'>
         Hello reatam
       </p>
       <button onClick={addNewTam}>
