@@ -1,10 +1,12 @@
 import { TamUnit } from "./tam";
-import { FaceSmileIcon, FaceFrownIcon } from "@heroicons/react/24/outline";
+import { FaceSmileIcon, FaceFrownIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
 export default function Tam({ tam }: { tam: TamUnit }) {
   function getFaceIcon(foodLevel: number) {
     if (foodLevel > 70) {
       return <FaceSmileIcon className="size-14 align-middle inline-block" />;
+    } else if (foodLevel <= 0) {
+      return <XCircleIcon className="size-14 align-middle inline-block" />;
     } else if (foodLevel < 30) {
       return <FaceFrownIcon className="size-14 align-middle inline-block" />;
     } else {

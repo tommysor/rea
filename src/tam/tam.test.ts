@@ -38,3 +38,16 @@ describe("feedTam", () => {
     expect(fedTam.foodLevel).toBeGreaterThan(tam.foodLevel);
   });
 });
+
+describe("deadTam", () => {
+  it("should not process more actions", () => {
+    let tam = Tam.createTam({ id: "myId" });
+    for (let i = 0; i < 100; i++) {
+      tam = Tam.idleTam(tam);
+    }
+    expect(tam.foodLevel).toBe(0);
+
+    tam = Tam.feedTam(tam);
+    expect(tam.foodLevel).toBe(0);
+  });
+});

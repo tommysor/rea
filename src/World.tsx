@@ -15,7 +15,7 @@ export default function World() {
       setWorldTam((prevWorldTam) => {
         const updatedTams = prevWorldTam.tams.map((tam) => {
           const rnd = Math.random();
-          if (rnd < 0.095) {
+          if (rnd < 0.085) {
             return feedTam(tam);
           } else {
             return idleTam(tam);
