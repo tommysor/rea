@@ -35,9 +35,23 @@ export default function App() {
 
   return (
     <>
-      <p className="text-3xl font-bold underline">Hello reatam</p>
-      <button onClick={addNewTam}>Add Tam</button>
-      <button onClick={clearTams}>Clear</button>
+      <h1 className="flex items-center justify-center text-3xl font-bold">
+        ReaTam
+      </h1>
+      <div className="flex items-center justify-center">
+        <button
+          onClick={addNewTam}
+          className="rounded-md bg-stone-500 mx-1 my-1 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Add Tam
+        </button>
+        <button
+          onClick={clearTams}
+          className="rounded-md bg-stone-500 mx-1 my-1 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Clear
+        </button>
+      </div>
       {tams.map((tam) => (
         <div key={tam.id}>
           <Tam tam={tam} />
