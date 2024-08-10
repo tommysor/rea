@@ -1,5 +1,7 @@
 import { TamUnit, createTam } from "./tam";
 
+const maxTams = 5;
+
 export type GodTamUnit = {
   tams: TamUnit[];
 };
@@ -8,6 +10,20 @@ export function createGodTam(): GodTamUnit {
   return {
     tams: [],
   };
+}
+
+function triggerChange({ triggerValue }: { triggerValue: number }): boolean {
+  return Math.random() < triggerValue;
+}
+
+function triggerValueFromProgress({
+  value,
+  max,
+}: {
+  value: number;
+  max: number;
+}): number {
+  return 0.25 * (1 - value / max);
 }
 
 export function godDecision(godTam: GodTamUnit): GodTamUnit {
@@ -20,7 +36,14 @@ export function godDecision(godTam: GodTamUnit): GodTamUnit {
   if (deadTam) {
     return godWithOneTamRemoved({ godTam, tamToRemove: deadTam });
   }
-  // todo: Chance to create a new tam
+  // Chance to create a new tam
+  const chance = triggerValueFromProgress({
+    value: godTam.tams.length,
+    max: maxTams,
+  });
+  if (triggerChange({ triggerValue: chance })) {
+    return godWithNewTam(godTam);
+  }
   return godTam;
 }
 
