@@ -11,11 +11,17 @@ export function createGodTam(): GodTamUnit {
 }
 
 export function godDecision(godTam: GodTamUnit): GodTamUnit {
+  // Pri1, if no tams, create one
   if (godTam.tams.length === 0) {
     return godWithNewTam(godTam);
   }
-
-  return godWithOneLessDeadTam(godTam);
+  // Pri2, if any tam is dead, remove it
+  const deadTam = godTam.tams.find((tam) => tam.foodLevel <= 0);
+  if (deadTam) {
+    return godWithOneTamRemoved({ godTam, tamToRemove: deadTam });
+  }
+  // todo: Chance to create a new tam
+  return godTam;
 }
 
 export function godWithNewTam(godTam: GodTamUnit): GodTamUnit {
@@ -26,9 +32,14 @@ export function godWithNewTam(godTam: GodTamUnit): GodTamUnit {
   };
 }
 
-function godWithOneLessDeadTam(godTam: GodTamUnit): GodTamUnit {
+function godWithOneTamRemoved({
+  godTam,
+  tamToRemove,
+}: {
+  godTam: GodTamUnit;
+  tamToRemove: TamUnit;
+}): GodTamUnit {
   const newGodTam = { ...godTam, tams: [...godTam.tams] };
-  const deadTam = godTam.tams.find((tam) => tam.foodLevel <= 0);
-  newGodTam.tams = godTam.tams.filter((tam) => tam.id != deadTam?.id);
+  newGodTam.tams = godTam.tams.filter((tam) => tam.id != tamToRemove.id);
   return newGodTam;
 }
