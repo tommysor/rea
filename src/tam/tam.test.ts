@@ -8,6 +8,7 @@ describe("createTam", () => {
     expect(tam).toBeDefined();
     expect(tam.id).toBeTruthy();
     expect(typeof tam.id).toBe("string");
+    expect(tam.id).toBe(id);
   });
 
   it("should create Tam alive", () => {
