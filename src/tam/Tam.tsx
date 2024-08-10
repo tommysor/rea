@@ -38,7 +38,7 @@ export default function Tam({ tam }: { tam: TamUnit }) {
             </dt>
             <dd className="order-3 font-semibold tracking-tight text-gray-900 sm:text-5xl">
               {getFaceIcon(tam.foodLevel)}
-              <span className="text-xs font-normal">{tam.foodLevel}</span>
+              <div className="text-xs font-normal inline-block w-0">{tam.foodLevel}</div>
             </dd>
           </div>
         </dl>
