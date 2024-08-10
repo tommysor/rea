@@ -11,6 +11,7 @@ export default function Tam({ tam }: { tam: TamUnit }) {
       return <FaceFrownIcon className="size-14 align-middle inline-block" />;
     } else {
       return (
+        // return "meh" face (modified FaceSmileIcon)
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
