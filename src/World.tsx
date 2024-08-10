@@ -6,12 +6,14 @@ import { createGodTam, godDecision } from "./tam/godtam";
 export default function World() {
   const [worldTam, setWorldTam] = useState(createGodTam());
   useEffect(() => {
-    const intervalGod = setInterval(() => {
-      setWorldTam((prev) => {
-        return godDecision(prev)
-    });
-    }, 10_000);
+    let counter = 0;
     const interval = setInterval(() => {
+      counter++;
+      if (counter % 10 === 0) {
+        setWorldTam((prev) => {
+          return godDecision(prev);
+        });
+      }
       setWorldTam((prevWorldTam) => {
         const updatedTams = prevWorldTam.tams.map((tam) => {
           const rnd = Math.random();
@@ -28,7 +30,6 @@ export default function World() {
 
     return () => {
       clearInterval(interval);
-      clearInterval(intervalGod);
     };
   }, []);
   function addNewTam() {
