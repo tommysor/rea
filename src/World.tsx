@@ -47,9 +47,14 @@ export default function World() {
   }
 
   const initialNodes = [
-    { id: "1", position: { x: 400, y: 0 }, data: { label: "1" } },
-    { id: "2", position: { x: 300, y: 100 }, data: { label: "2" } },
-    { id: "3", position: { x: 500, y: 100 }, data: { label: "3" } },
+    {
+      id: "1",
+      position: { x: 400, y: 20 },
+      data: { label: <Godtam addNewTam={addNewTam} clearTams={clearTams} /> },
+      style: { width: 300 },
+    },
+    { id: "2", position: { x: 300, y: 300 }, data: { label: "2" } },
+    { id: "3", position: { x: 500, y: 300 }, data: { label: "3" } },
   ];
   const initialEdges = [
     { id: "e1-2", source: "1", target: "2" },
