@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "lint": "eslint .",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "jest",
     "storybook": "storybook dev -p 6006",
