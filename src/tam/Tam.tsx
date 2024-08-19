@@ -1,5 +1,9 @@
 import { TamUnit } from "./tam";
-import { FaceSmileIcon, FaceFrownIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import {
+  FaceSmileIcon,
+  FaceFrownIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 
 export default function Tam({ tam }: { tam: TamUnit }) {
   function getFaceIcon(foodLevel: number) {
@@ -32,17 +36,19 @@ export default function Tam({ tam }: { tam: TamUnit }) {
   return (
     <div className="bg-neutral-300 rounded-3xl my-4 mx-4 py-4 sm:py-8">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
-        <dl className="grid grid-cols-1 gap-x-8 gap-y-8 text-center lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-8 text-center lg:grid-cols-3">
           <div key={tam.id} className="mx-auto flex max-w-xs flex-col gap-y-4">
-            <dt className="order-first text-xs leading-1 text-gray-600">
+            <div className="order-first text-xs leading-1 text-gray-600">
               Id: {tam.id}, Age: {tam.age}
-            </dt>
-            <dd className="order-3 font-semibold tracking-tight text-gray-900 sm:text-5xl">
+            </div>
+            <div className="order-3 font-semibold tracking-tight text-gray-900 sm:text-5xl">
               {getFaceIcon(tam.foodLevel)}
-              <div className="text-xs font-normal inline-block w-0">{tam.foodLevel}</div>
-            </dd>
+              <div className="text-xs font-normal inline-block w-0">
+                {tam.foodLevel}
+              </div>
+            </div>
           </div>
-        </dl>
+        </div>
       </div>
     </div>
   );
