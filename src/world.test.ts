@@ -1,5 +1,5 @@
 import { describe, it, expect, jest } from "@jest/globals";
-import { WorldUnit, nextWorld } from "./world";
+import { WorldUnit, baseProbabilityFromProgress, nextWorld } from "./world";
 
 const mockRnd = jest.fn().mockReturnValue(0.5);
 const mockRndInt = jest.fn().mockReturnValue(42);
@@ -45,5 +45,22 @@ describe("nextWorld", () => {
     const tam = world2.tamMap[tamId];
     const tam2 = nextWorld(world2).tamMap[tamId];
     expect(tam2.age).toBeGreaterThan(tam.age);
+  });
+});
+
+describe("baseProbabilityFromProgress", () => {
+  it("should be between 0 and 1", () => {
+    const res = baseProbabilityFromProgress({ value: 0, max: 3 });
+    expect(res).toBeGreaterThanOrEqual(0);
+    expect(res).toBeLessThan(1);
+  });
+  it("should be 0 when value is max", () => {
+    const res = baseProbabilityFromProgress({ value: 3, max: 3 });
+    expect(res).toBe(0);
+  });
+  it("should be lower when value is higher", () => {
+    const res1 = baseProbabilityFromProgress({ value: 1, max: 3 });
+    const res2 = baseProbabilityFromProgress({ value: 2, max: 3 });
+    expect(res1).toBeGreaterThan(res2);
   });
 });

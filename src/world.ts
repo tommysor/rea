@@ -50,3 +50,13 @@ function gameTickTam(tam: TamUnit): TamUnit {
     return idleTam(tam);
   }
 }
+
+export function baseProbabilityFromProgress({
+  value,
+  max,
+}: {
+  value: number;
+  max: number;
+}): number {
+  return 0.25 * (1 - value / max);
+}
