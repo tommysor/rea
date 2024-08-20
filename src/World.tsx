@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { WorldUnit, nextWorld, initialWorld } from "./world";
-import { createTam, idleTam, feedTam, TamUnit } from "./tam/tam";
-import Godtam from "./tam/Godtam";
 import Tam from "./tam/Tam";
-import { createGodTam, godDecision, GodTamUnit } from "./tam/godtam";
 import {
   ReactFlow,
   Background,
@@ -13,11 +10,8 @@ import {
 import "@xyflow/react/dist/style.css";
 import Dagre from "@dagrejs/dagre";
 
-type Unit = GodTamUnit | TamUnit;
-
 export default function World() {
   const [world, setWorld] = useState<WorldUnit>(initialWorld);
-  const [worldTam, setWorldTam] = useState(createGodTam());
   useEffect(() => {
     let counter = 0;
     const interval = setInterval(() => {
@@ -25,59 +19,26 @@ export default function World() {
       setWorld((oldWorld) => {
         return nextWorld(oldWorld);
       });
-      if (counter % 10 === 0) {
-        setWorldTam((prev) => {
-          return godDecision(prev);
-        });
-      }
-      const mapChildrenStatus = (tam: Unit): Unit => {
-        const updatedTams = tam.children.map((tam) => {
-          const rnd = Math.random();
-          let newTam = tam;
-          if (rnd < 0.085) {
-            newTam = feedTam(tam);
-          } else {
-            newTam = idleTam(tam);
-          }
-          return newTam;
-        });
-        for (let i = 0; i < updatedTams.length; i++) {
-          updatedTams[i] = mapChildrenStatus(updatedTams[i]) as TamUnit;
-        }
-        return { ...tam, children: updatedTams };
-      };
-      setWorldTam((prevWorldTam) => {
-        return mapChildrenStatus(prevWorldTam);
-      });
     }, 1000);
 
     return () => {
       clearInterval(interval);
     };
   }, []);
-  function addNewTam() {
-    const id = Math.ceil(Math.random() * 1_000_000);
-    const newTam = createTam({ id: id.toString() });
-    setWorldTam((prevWorldTam) => {
-      return { ...prevWorldTam, children: [...prevWorldTam.children, newTam] };
-    });
-  }
-  function clearTams() {
-    setWorldTam({ ...worldTam, children: [] });
-  }
 
   const initialNodes = [
     {
-      id: worldTam.id,
+      id: "0",
       position: { x: 0, y: 0 },
-      data: { label: <Godtam addNewTam={addNewTam} clearTams={clearTams} /> },
+      data: { label: <div></div> },
       style: { width: 300, height: 230 },
       measured: { width: 300, height: 200 },
     },
   ];
   const initialEdges = [];
-  if (worldTam.children.length > 0) {
-    const tams = worldTam.children.map((tam) => {
+  if (world.topLevelTamIds.length > 0) {
+    const tams = world.topLevelTamIds.map((tamId) => {
+      const tam = world.tamMap[tamId];
       return {
         id: tam.id,
         position: { x: 0, y: 0 },
@@ -89,42 +50,12 @@ export default function World() {
     initialNodes.push(...tams);
     var edges = tams.map((tam) => {
       return {
-        id: `e${worldTam.id}-${tam.id}`,
-        source: worldTam.id,
+        id: `e0-${tam.id}`,
+        source: "0",
         target: tam.id,
       };
     });
     initialEdges.push(...edges);
-  }
-
-  const addNodes = ({ tam }: { tam: TamUnit }): void => {
-    if (tam.children.length > 0) {
-      const nodes = tam.children.map((child) => {
-        return {
-          id: child.id,
-          position: { x: 0, y: 0 },
-          data: { label: <Tam tam={child} /> },
-          style: { width: 300, height: 230 },
-          measured: { width: 300, height: 200 },
-        };
-      });
-      initialNodes.push(...nodes);
-      var edges = nodes.map((child) => {
-        return {
-          id: `e${tam.id}-${child.id}`,
-          source: tam.id,
-          target: child.id,
-        };
-      });
-      initialEdges.push(...edges);
-
-      for (let i = 0; i < tam.children.length; i++) {
-        addNodes({ tam: tam.children[i] });
-      }
-    }
-  };
-  for (let i = 0; i < worldTam.children.length; i++) {
-    addNodes({ tam: worldTam.children[i] });
   }
 
   const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
