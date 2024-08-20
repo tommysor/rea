@@ -3,8 +3,14 @@ import { createTam, idleTam, feedTam } from "./tam/tam";
 import Godtam from "./tam/Godtam";
 import Tam from "./tam/Tam";
 import { createGodTam, godDecision } from "./tam/godtam";
-import { ReactFlow, Background, BackgroundVariant } from "@xyflow/react";
+import {
+  ReactFlow,
+  Background,
+  BackgroundVariant,
+  MiniMap,
+} from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import Dagre from "@dagrejs/dagre";
 
 export default function World() {
   const [worldTam, setWorldTam] = useState(createGodTam());
@@ -48,38 +54,69 @@ export default function World() {
 
   const initialNodes = [
     {
-      id: "1",
-      position: { x: 400, y: 20 },
+      id: worldTam.id,
+      position: { x: 0, y: 0 },
       data: { label: <Godtam addNewTam={addNewTam} clearTams={clearTams} /> },
-      style: { width: 300 },
+      style: { width: 300, height: 230 },
+      measured: { width: 300, height: 200 },
     },
-    { id: "2", position: { x: 300, y: 300 }, data: { label: "2" } },
-    { id: "3", position: { x: 500, y: 300 }, data: { label: "3" } },
   ];
-  const initialEdges = [
-    { id: "e1-2", source: "1", target: "2" },
-    { id: "e1-3", source: "1", target: "3" },
-  ];
+  const initialEdges = [];
+  if (worldTam.tams.length > 0) {
+    const tams = worldTam.tams.map((tam) => {
+      return {
+        id: tam.id,
+        position: { x: 0, y: 0 },
+        data: { label: <Tam tam={tam} /> },
+        style: { width: 300, height: 230 },
+        measured: { width: 300, height: 200 },
+      };
+    });
+    initialNodes.push(...tams);
+    var edges = tams.map((tam) => {
+      return {
+        id: `e${worldTam.id}-${tam.id}`,
+        source: worldTam.id,
+        target: tam.id,
+      };
+    });
+    initialEdges.push(...edges);
+  }
+
+  const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
+  g.setGraph({ rankdir: "TB" });
+
+  initialEdges.forEach((edge) => g.setEdge(edge.source, edge.target));
+  initialNodes.forEach((node) =>
+    g.setNode(node.id, {
+      ...node,
+      width: node.measured?.width ?? 0,
+      height: node.measured?.height ?? 0,
+    }),
+  );
+
+  Dagre.layout(g);
+
+  var nodes = initialNodes.map((node) => {
+    const position = g.node(node.id);
+    return { ...node, position };
+  });
 
   return (
     <div>
-      <Godtam addNewTam={addNewTam} clearTams={clearTams} />
-      <div className="grid grid-cols-5">
-        {worldTam.tams.map((tam) => (
-          <div key={tam.id} className="grid-flow-col">
-            <Tam tam={tam} />
-          </div>
-        ))}
-      </div>
-      <div
-        style={{
-          width: "100vw",
-          height: "100vw",
-        }}
-      >
-        <ReactFlow nodes={initialNodes} edges={initialEdges}>
+      <div className="w-screen h-screen">
+        <ReactFlow nodes={nodes} edges={initialEdges}>
+          <MiniMap
+            zoomable
+            pannable
+            nodeStrokeWidth={5}
+            nodeBorderRadius={50}
+            bgColor="olivedrab"
+            nodeColor="teal"
+            nodeStrokeColor="black"
+          />
           <Background
-            color="#aaa"
+            bgColor="powderblue"
             variant={BackgroundVariant.Dots}
             gap={32}
             size={1}

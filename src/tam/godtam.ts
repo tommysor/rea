@@ -3,11 +3,13 @@ import { TamUnit, createTam } from "./tam";
 const maxTams = 5;
 
 export type GodTamUnit = {
+  id: string;
   tams: TamUnit[];
 };
 
 export function createGodTam(): GodTamUnit {
   return {
+    id: "0",
     tams: [],
   };
 }
