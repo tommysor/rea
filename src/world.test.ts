@@ -37,6 +37,17 @@ describe("nextWorld", () => {
     expect(tam).toBeDefined();
     expect(tam.id).toBe(tamId);
   });
+  it("should create more top level Tams by chance", () => {
+    let world = createWorld();
+    world = nextWorld(world);
+    expect(world.topLevelTamIds).toHaveLength(1);
+    mockRnd.mockReturnValue(0.999);
+    world = nextWorld(world);
+    expect(world.topLevelTamIds).toHaveLength(1);
+    mockRnd.mockReturnValue(0.001);
+    world = nextWorld(world);
+    expect(world.topLevelTamIds).toHaveLength(2);
+  });
 
   it("should age tams", () => {
     const world1 = createWorld();

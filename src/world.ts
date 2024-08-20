@@ -16,10 +16,21 @@ export const initialWorld: WorldUnit = {
 export function nextWorld(oldWorld: WorldUnit): WorldUnit {
   const world = { ...oldWorld };
   world.age++;
-  if (world.topLevelTamIds.length === 0) {
-    addTopLevelTam(world, createNewTam());
-  }
+  maybeAddTopLevelTam(world);
   gameTickTams(world);
+  return world;
+}
+
+function maybeAddTopLevelTam(world: WorldUnit): WorldUnit {
+  const odds = baseProbabilityFromProgress({
+    value: world.topLevelTamIds.length,
+    max: 3,
+  });
+  const rndVal = rnd().rnd();
+  if (world.topLevelTamIds.length === 0 || rndVal < odds) {
+    return addTopLevelTam(world, createNewTam());
+  }
+
   return world;
 }
 
