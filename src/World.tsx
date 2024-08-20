@@ -24,7 +24,7 @@ export default function World() {
         });
       }
       setWorldTam((prevWorldTam) => {
-        const updatedTams = prevWorldTam.tams.map((tam) => {
+        const updatedTams = prevWorldTam.children.map((tam) => {
           const rnd = Math.random();
           if (rnd < 0.085) {
             return feedTam(tam);
@@ -32,7 +32,7 @@ export default function World() {
             return idleTam(tam);
           }
         });
-        const newWorldTam = { ...prevWorldTam, tams: updatedTams };
+        const newWorldTam = { ...prevWorldTam, children: updatedTams };
         return newWorldTam;
       });
     }, 1000);
@@ -45,11 +45,11 @@ export default function World() {
     const id = Math.ceil(Math.random() * 1_000_000);
     const newTam = createTam({ id: id.toString() });
     setWorldTam((prevWorldTam) => {
-      return { ...prevWorldTam, tams: [...prevWorldTam.tams, newTam] };
+      return { ...prevWorldTam, children: [...prevWorldTam.children, newTam] };
     });
   }
   function clearTams() {
-    setWorldTam({ ...worldTam, tams: [] });
+    setWorldTam({ ...worldTam, children: [] });
   }
 
   const initialNodes = [
@@ -62,8 +62,8 @@ export default function World() {
     },
   ];
   const initialEdges = [];
-  if (worldTam.tams.length > 0) {
-    const tams = worldTam.tams.map((tam) => {
+  if (worldTam.children.length > 0) {
+    const tams = worldTam.children.map((tam) => {
       return {
         id: tam.id,
         position: { x: 0, y: 0 },

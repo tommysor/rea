@@ -4,13 +4,13 @@ const maxTams = 5;
 
 export type GodTamUnit = {
   id: string;
-  tams: TamUnit[];
+  children: TamUnit[];
 };
 
 export function createGodTam(): GodTamUnit {
   return {
     id: "0",
-    tams: [],
+    children: [],
   };
 }
 
@@ -30,17 +30,17 @@ function triggerValueFromProgress({
 
 export function godDecision(godTam: GodTamUnit): GodTamUnit {
   // Pri1, if no tams, create one
-  if (godTam.tams.length === 0) {
+  if (godTam.children.length === 0) {
     return godWithNewTam(godTam);
   }
   // Pri2, if any tam is dead, remove it
-  const deadTam = godTam.tams.find((tam) => tam.foodLevel <= 0);
+  const deadTam = godTam.children.find((tam) => tam.foodLevel <= 0);
   if (deadTam) {
     return godWithOneTamRemoved({ godTam, tamToRemove: deadTam });
   }
   // Chance to create a new tam
   const chance = triggerValueFromProgress({
-    value: godTam.tams.length,
+    value: godTam.children.length,
     max: maxTams,
   });
   if (triggerChange({ triggerValue: chance })) {
@@ -53,7 +53,7 @@ export function godWithNewTam(godTam: GodTamUnit): GodTamUnit {
   const id = Math.ceil(Math.random() * 1_000_000);
   return {
     ...godTam,
-    tams: [...godTam.tams, createTam({ id: id.toString() })],
+    children: [...godTam.children, createTam({ id: id.toString() })],
   };
 }
 
@@ -64,7 +64,9 @@ function godWithOneTamRemoved({
   godTam: GodTamUnit;
   tamToRemove: TamUnit;
 }): GodTamUnit {
-  const newGodTam = { ...godTam, tams: [...godTam.tams] };
-  newGodTam.tams = godTam.tams.filter((tam) => tam.id != tamToRemove.id);
+  const newGodTam = { ...godTam, children: [...godTam.children] };
+  newGodTam.children = godTam.children.filter(
+    (tam) => tam.id != tamToRemove.id,
+  );
   return newGodTam;
 }
