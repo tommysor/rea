@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { WorldUnit, nextWorld } from "./world";
+import { WorldUnit, nextWorld, initialWorld } from "./world";
 import { createTam, idleTam, feedTam, TamUnit } from "./tam/tam";
 import Godtam from "./tam/Godtam";
 import Tam from "./tam/Tam";
@@ -16,19 +16,15 @@ import Dagre from "@dagrejs/dagre";
 type Unit = GodTamUnit | TamUnit;
 
 export default function World() {
-  const [world, setWorld] = useState<WorldUnit>({
-    age: 0,
-    topLevelTamIds: [],
-    tamMap: {},
-  });
+  const [world, setWorld] = useState<WorldUnit>(initialWorld);
   const [worldTam, setWorldTam] = useState(createGodTam());
   useEffect(() => {
     let counter = 0;
-    setWorld((oldWorld) => {
-      return nextWorld(oldWorld);
-    });
     const interval = setInterval(() => {
       counter++;
+      setWorld((oldWorld) => {
+        return nextWorld(oldWorld);
+      });
       if (counter % 10 === 0) {
         setWorldTam((prev) => {
           return godDecision(prev);

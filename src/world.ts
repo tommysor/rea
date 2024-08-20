@@ -7,6 +7,12 @@ export type WorldUnit = {
   tamMap: Record<string, TamUnit>;
 };
 
+export const initialWorld: WorldUnit = {
+  age: 0,
+  topLevelTamIds: [],
+  tamMap: {},
+};
+
 export function nextWorld(oldWorld: WorldUnit): WorldUnit {
   const world = { ...oldWorld };
   world.age++;
