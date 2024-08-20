@@ -37,4 +37,13 @@ describe("nextWorld", () => {
     expect(tam).toBeDefined();
     expect(tam.id).toBe(tamId);
   });
+
+  it("should age tams", () => {
+    const world1 = createWorld();
+    const world2 = nextWorld(world1);
+    const tamId = world2.topLevelTamIds[0];
+    const tam = world2.tamMap[tamId];
+    const tam2 = nextWorld(world2).tamMap[tamId];
+    expect(tam2.age).toBeGreaterThan(tam.age);
+  });
 });
