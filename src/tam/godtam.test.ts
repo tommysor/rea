@@ -26,6 +26,20 @@ describe("godDecision", () => {
     expect(newGodTam.children.length).toBeGreaterThan(1);
   });
 
+  it("should create additional decendent tams, by chance", () => {
+    let godtam = G.createGodTam();
+    godtam = G.godDecision(godtam);
+    expect(godtam.children.length).toBe(1);
+
+    for (let i = 0; i < 200; i++) {
+      godtam = G.godDecision(godtam);
+    }
+    const grandChildren = godtam.children.filter(
+      (tam) => tam.children.length > 0,
+    );
+    expect(grandChildren.length).toBeGreaterThan(0);
+  });
+
   it("should remove a tam, when one is dead", () => {
     let godtam = G.createGodTam();
     godtam = G.godDecision(godtam);

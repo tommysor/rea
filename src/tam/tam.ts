@@ -2,6 +2,7 @@ export type TamUnit = {
   id: string;
   age: number;
   foodLevel: number;
+  children: TamUnit[];
 };
 
 const foodLevelMax = 100;
@@ -11,6 +12,7 @@ export function createTam({ id }: { id: string }): TamUnit {
     id: id,
     age: 0,
     foodLevel: foodLevelMax,
+    children: [],
   };
 }
 

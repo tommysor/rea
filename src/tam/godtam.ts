@@ -46,14 +46,50 @@ export function godDecision(godTam: GodTamUnit): GodTamUnit {
   if (triggerChange({ triggerValue: chance })) {
     return godWithNewTam(godTam);
   }
+  // Chance to give a tam a new tam
+  if (triggerChange({ triggerValue: Math.max(chance / 2, 0.1) })) {
+    return godWithNewDecendantTam(godTam);
+  }
   return godTam;
 }
 
-export function godWithNewTam(godTam: GodTamUnit): GodTamUnit {
+function createTamWithGeneratedId(): TamUnit {
   const id = Math.ceil(Math.random() * 1_000_000);
+  return createTam({ id: id.toString() });
+}
+
+function godWithNewDecendantTam(godTam: GodTamUnit): GodTamUnit {
+  const idx = Math.floor(Math.random() * godTam.children.length);
+  const tam = godTam.children[idx];
+  const newGod = { ...godTam, children: [...godTam.children] };
+  newGod.children[idx] = tamWithNewDecendantTam(tam);
+  return newGod;
+}
+
+function tamWithNewDecendantTam(tam: TamUnit): TamUnit {
+  if (tam.children.length <= 0) {
+    return tamWithNewTam(tam);
+  } else if (tam.children.length < 3) {
+    if (Math.random() < 0.5) {
+      return tamWithNewTam(tam);
+    }
+  }
+  const idx = Math.floor(Math.random() * tam.children.length);
+  tam.children[idx] = tamWithNewDecendantTam(tam.children[idx]);
+  return tam;
+}
+
+function tamWithNewTam(tam: TamUnit): TamUnit {
+  return {
+    ...tam,
+    children: [...tam.children, createTamWithGeneratedId()],
+  };
+}
+
+export function godWithNewTam(godTam: GodTamUnit): GodTamUnit {
   return {
     ...godTam,
-    children: [...godTam.children, createTam({ id: id.toString() })],
+    children: [...godTam.children, createTamWithGeneratedId()],
   };
 }
 
