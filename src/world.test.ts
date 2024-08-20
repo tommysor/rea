@@ -1,9 +1,12 @@
 import { describe, it, expect, jest } from "@jest/globals";
 import { WorldUnit, baseProbabilityFromProgress, nextWorld } from "./world";
 
-const mockRnd = jest.fn().mockReturnValue(0.5);
+const mockRnd = jest.fn().mockReturnValue(0.999);
 const mockRndInt = jest.fn().mockReturnValue(42);
-const mockRndTamId = jest.fn().mockReturnValue(8964);
+const mockRndTamId = jest
+  .fn()
+  // needs actual random number to avoid collisions
+  .mockImplementation(() => Math.ceil(Math.random() * 2 ** 30));
 jest.mock("./rnd", () => {
   return jest.fn().mockImplementation(() => {
     return {
@@ -56,6 +59,27 @@ describe("nextWorld", () => {
     const tam = world2.tamMap[tamId];
     const tam2 = nextWorld(world2).tamMap[tamId];
     expect(tam2.age).toBeGreaterThan(tam.age);
+  });
+});
+
+describe("nextWorld tam lifetimes", () => {
+  it("should remove dead tams after delay", () => {
+    let world = createWorld();
+    world = nextWorld(world);
+    const tamId = world.topLevelTamIds[0];
+    const tam = world.tamMap[tamId];
+    tam.foodLevel = 0;
+    const deathAge = tam.age;
+
+    world = nextWorld(world);
+    expect(world.tamMap[tamId]).toBeDefined();
+    expect(world.tamMap[tamId].foodLevel).toBe(0);
+    expect(world.tamMap[tamId].age).toBe(deathAge);
+    for (let i = 0; i < 15; i++) {
+      world = nextWorld(world);
+    }
+    expect(world.tamMap[tamId]).toBeUndefined();
+    expect(world.topLevelTamIds).not.toContain(tamId);
   });
 });
 

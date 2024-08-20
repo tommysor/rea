@@ -17,7 +17,24 @@ export function nextWorld(oldWorld: WorldUnit): WorldUnit {
   const world = { ...oldWorld };
   world.age++;
   maybeAddTopLevelTam(world);
+  maybeCleanupDeadTam(world);
   gameTickTams(world);
+  return world;
+}
+
+function maybeCleanupDeadTam(world: WorldUnit): WorldUnit {
+  if (world.age % 10 === 0) {
+    for (const tamId of world.topLevelTamIds) {
+      const tam = world.tamMap[tamId];
+      if (tam.foodLevel <= 0) {
+        delete world.tamMap[tamId];
+        world.topLevelTamIds = world.topLevelTamIds.filter(
+          (id) => id !== tamId,
+        );
+        break;
+      }
+    }
+  }
   return world;
 }
 
