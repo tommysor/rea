@@ -31,6 +31,17 @@ describe("nextWorld", () => {
     expect(world3.age).toBe(2);
   });
 
+  it("should age tams", () => {
+    const world1 = createWorld();
+    const world2 = nextWorld(world1);
+    const tamId = world2.topLevelTamIds[0];
+    const tam = world2.tamMap[tamId];
+    const tam2 = nextWorld(world2).tamMap[tamId];
+    expect(tam2.age).toBeGreaterThan(tam.age);
+  });
+});
+
+describe("nextWorld tam lifetimes", () => {
   it("should create 1 top level Tam when none exist", () => {
     const world1 = createWorld();
     const world2 = nextWorld(world1);
@@ -51,18 +62,6 @@ describe("nextWorld", () => {
     world = nextWorld(world);
     expect(world.topLevelTamIds).toHaveLength(2);
   });
-
-  it("should age tams", () => {
-    const world1 = createWorld();
-    const world2 = nextWorld(world1);
-    const tamId = world2.topLevelTamIds[0];
-    const tam = world2.tamMap[tamId];
-    const tam2 = nextWorld(world2).tamMap[tamId];
-    expect(tam2.age).toBeGreaterThan(tam.age);
-  });
-});
-
-describe("nextWorld tam lifetimes", () => {
   it("should remove dead tams after delay", () => {
     let world = createWorld();
     world = nextWorld(world);
