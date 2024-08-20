@@ -1,5 +1,5 @@
 import rnd from "./rnd";
-import { TamUnit } from "./tam/tam";
+import { TamUnit, createTam } from "./tam/tam";
 
 export type WorldUnit = {
   age: number;
@@ -24,10 +24,5 @@ function addTopLevelTam(world: WorldUnit, tam: TamUnit): WorldUnit {
 
 function createNewTam(): TamUnit {
   const id = rnd().rndTamId();
-  return {
-    id: id.toString(),
-    age: 0,
-    foodLevel: 100,
-    children: [],
-  };
+  return createTam({ id: id.toString() });
 }
