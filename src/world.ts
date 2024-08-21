@@ -99,11 +99,18 @@ function createNewTam(): TamUnit {
 
 function gameTickTams(world: WorldUnit): WorldUnit {
   for (const tamId of world.topLevelTamIds) {
-    const tam = world.tamMap[tamId];
-    console.assert(tam, `tam not found for id ${tamId}`);
-    world.tamMap[tamId] = gameTickTam(tam);
+    gameTickTamAndDecendants(world, tamId);
   }
   return world;
+}
+
+function gameTickTamAndDecendants(world: WorldUnit, tamId: string) {
+  const tam = world.tamMap[tamId];
+  console.assert(tam, `tam not found for id ${tamId}`);
+  world.tamMap[tamId] = gameTickTam(tam);
+  for (const child of tam.children) {
+    gameTickTamAndDecendants(world, child.id);
+  }
 }
 
 function gameTickTam(tam: TamUnit): TamUnit {
