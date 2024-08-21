@@ -7,16 +7,26 @@ export type WorldUnit = {
   tamMap: Record<string, TamUnit>;
 };
 
-export const initialWorld: WorldUnit = {
-  age: 0,
-  topLevelTamIds: [],
-  tamMap: {},
-};
+export function initialWorld(): WorldUnit {
+  return {
+    age: 0,
+    topLevelTamIds: [],
+    tamMap: {},
+  };
+}
+
+function cloneWorld(world: WorldUnit): WorldUnit {
+  return {
+    age: world.age,
+    topLevelTamIds: [...world.topLevelTamIds],
+    tamMap: { ...world.tamMap },
+  };
+}
 
 export function nextWorld(oldWorld: WorldUnit): WorldUnit {
-  const world = { ...oldWorld };
+  const world = cloneWorld(oldWorld);
   world.age++;
-  maybeAddTopLevelTam(world);
+  maybeAddTam(world);
   maybeCleanupDeadTam(world);
   gameTickTams(world);
   return world;
@@ -38,7 +48,7 @@ function maybeCleanupDeadTam(world: WorldUnit): WorldUnit {
   return world;
 }
 
-function maybeAddTopLevelTam(world: WorldUnit): WorldUnit {
+function maybeAddTam(world: WorldUnit): WorldUnit {
   const odds = baseProbabilityFromProgress({
     value: world.topLevelTamIds.length,
     max: 3,
@@ -46,6 +56,12 @@ function maybeAddTopLevelTam(world: WorldUnit): WorldUnit {
   const rndVal = rnd().rnd();
   if (world.topLevelTamIds.length === 0 || rndVal < odds) {
     return addTopLevelTam(world, createNewTam());
+  }
+  const rndVal2 = rnd().rnd();
+  if (rndVal2 < 0.05) {
+    var tam = createNewTam();
+    world.tamMap[tam.id] = tam;
+    assignTamToSomeParent(world, tam);
   }
 
   return world;
@@ -57,6 +73,25 @@ function addTopLevelTam(world: WorldUnit, tam: TamUnit): WorldUnit {
   return world;
 }
 
+function assignTamToSomeParent(world: WorldUnit, tam: TamUnit): WorldUnit {
+  let idx = rnd().rndInt(world.topLevelTamIds.length);
+  let parent = world.tamMap[world.topLevelTamIds[idx]];
+  while (parent) {
+    if (parent.children.length < 3) {
+      const rnd2 = rnd().rnd();
+      if (parent.children.length === 0 || rnd2 < 0.3) {
+        parent.children.push(tam);
+        return world;
+      }
+    }
+    idx = rnd().rndInt(parent.children.length);
+    //todo: when refactor to children containing ids instead of references.
+    parent = world.tamMap[parent.children[idx].id];
+  }
+  console.assert(false, "should not reach here");
+  return world;
+}
+
 function createNewTam(): TamUnit {
   const id = rnd().rndTamId();
   return createTam({ id: id.toString() });
@@ -65,6 +100,7 @@ function createNewTam(): TamUnit {
 function gameTickTams(world: WorldUnit): WorldUnit {
   for (const tamId of world.topLevelTamIds) {
     const tam = world.tamMap[tamId];
+    console.assert(tam, `tam not found for id ${tamId}`);
     world.tamMap[tamId] = gameTickTam(tam);
   }
   return world;

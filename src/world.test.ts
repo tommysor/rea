@@ -7,7 +7,7 @@ import {
 } from "./world";
 
 const mockRnd = jest.fn().mockReturnValue(0.999);
-const mockRndInt = jest.fn().mockReturnValue(42);
+const mockRndInt = jest.fn().mockReturnValue(0);
 const mockRndTamId = jest
   .fn()
   // needs actual random number to avoid collisions
@@ -23,7 +23,7 @@ jest.mock("./rnd", () => {
 });
 
 function createWorld(): WorldUnit {
-  return initialWorld;
+  return initialWorld();
 }
 
 describe("nextWorld", () => {
@@ -84,6 +84,26 @@ describe("nextWorld tam lifetimes", () => {
     }
     expect(world.tamMap[tamId]).toBeUndefined();
     expect(world.topLevelTamIds).not.toContain(tamId);
+  });
+});
+
+describe("next world tam reproduction", () => {
+  it("should create more descendants by chance", () => {
+    let world = createWorld();
+    world = nextWorld(world);
+    expect(world.topLevelTamIds).toHaveLength(1);
+    expect(Object.keys(world.tamMap)).toHaveLength(1);
+    const tamId = world.topLevelTamIds[0];
+    mockRnd.mockReturnValueOnce(0.999).mockReturnValue(0.001);
+    world = nextWorld(world);
+    expect(world.topLevelTamIds).toHaveLength(1);
+    expect(Object.keys(world.tamMap)).toHaveLength(2);
+    const topTam = world.tamMap[tamId];
+    expect(topTam.children).toHaveLength(1);
+    const childTamId = topTam.children[0];
+    expect(childTamId).not.toBe(tamId);
+    //todo: when refactor to children containing ids instead of references.
+    expect(world.tamMap[childTamId.id]).toBeDefined();
   });
 });
 

@@ -11,7 +11,7 @@ import "@xyflow/react/dist/style.css";
 import Dagre from "@dagrejs/dagre";
 
 export default function World() {
-  const [world, setWorld] = useState<WorldUnit>(initialWorld);
+  const [world, setWorld] = useState<WorldUnit>(initialWorld());
   useEffect(() => {
     let counter = 0;
     const interval = setInterval(() => {
