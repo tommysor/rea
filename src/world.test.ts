@@ -1,5 +1,10 @@
 import { describe, it, expect, jest } from "@jest/globals";
-import { WorldUnit, baseProbabilityFromProgress, nextWorld } from "./world";
+import {
+  WorldUnit,
+  initialWorld,
+  baseProbabilityFromProgress,
+  nextWorld,
+} from "./world";
 
 const mockRnd = jest.fn().mockReturnValue(0.999);
 const mockRndInt = jest.fn().mockReturnValue(42);
@@ -18,7 +23,7 @@ jest.mock("./rnd", () => {
 });
 
 function createWorld(): WorldUnit {
-  return { age: 0, topLevelTamIds: [], tamMap: {} } as WorldUnit;
+  return initialWorld;
 }
 
 describe("nextWorld", () => {
