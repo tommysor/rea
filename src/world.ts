@@ -37,15 +37,36 @@ function maybeCleanupDeadTam(world: WorldUnit): WorldUnit {
     for (const tamId of world.topLevelTamIds) {
       const tam = world.tamMap[tamId];
       if (tam.foodLevel <= 0) {
-        delete world.tamMap[tamId];
+        cleanupDeadChildren(world, tamId, true);
         world.topLevelTamIds = world.topLevelTamIds.filter(
           (id) => id !== tamId,
         );
-        break;
+      } else {
+        cleanupDeadChildren(world, tamId, false);
       }
     }
   }
   return world;
+}
+
+function cleanupDeadChildren(
+  world: WorldUnit,
+  tamId: string,
+  isDead: boolean,
+): boolean {
+  const tam = world.tamMap[tamId];
+  console.assert(tam, `tam not found for id ${tamId}`);
+  const isDead2 = isDead || tam.foodLevel <= 0;
+  for (const child of tam.children) {
+    const childDead = cleanupDeadChildren(world, child.id, isDead2);
+    if (childDead) {
+      tam.children = tam.children.filter((c) => c.id !== child.id);
+    }
+  }
+  if (isDead2) {
+    delete world.tamMap[tamId];
+  }
+  return isDead2;
 }
 
 function maybeAddTam(world: WorldUnit): WorldUnit {
